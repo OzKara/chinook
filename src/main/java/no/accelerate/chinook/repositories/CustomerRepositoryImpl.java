@@ -52,8 +52,8 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     @Override
     public Customer findById(Long id) {
         String sql = "SELECT customer_id, first_name, last_name, country, postal_code, phone, email "
-                + "FROM customer "
-                + "WHERE customer_id = ?";
+                   + "FROM customer "
+                   + "WHERE customer_id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, id);
@@ -105,6 +105,33 @@ public class CustomerRepositoryImpl implements CustomerRepository{
 
     @Override
     public List<Customer> getCustomerSubset(int limit, int offset) {
+        List <Customer> customers = new ArrayList<>();
+        String sql = "SELECT customer_id, first_name, last_name, country, postal_code, phone, email "
+                + "FROM customer "
+                + "WHERE customer "
+                + "LIMIT ? OFFSET ?";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, limit);
+            preparedStatement.setInt(2, offset);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Customer customer = new Customer();
+                customer.setId(resultSet.getLong("customer_id"));
+                customer.setFirstName(resultSet.getString("first_name"));
+                customer.setLastName(resultSet.getString("last_name"));
+                customer.setCountry(resultSet.getString("country"));
+                customer.setPostalCode(resultSet.getString("postal_code"));
+                customer.setPhoneNumber(resultSet.getString("phone"));
+                customer.setEmail(resultSet.getString("email"));
+                customers.add(customer);
+            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exception
+        }
         return null;
     }
 }
