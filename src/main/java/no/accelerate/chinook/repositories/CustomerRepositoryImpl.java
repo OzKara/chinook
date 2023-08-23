@@ -102,4 +102,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     public Customer findByName(String name) {
         return null;
     }
+
+    @Override
+    public List<Customer> getCustomerSubset(int limit, int offset) {
+        return null;
+    }
 }
