@@ -19,10 +19,14 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         List<Customer> customers = customerRepository.findAll();
+        Customer customerFindById = customerRepository.findById(3L);
 
-        System.out.println("Customers:");
+        System.out.println("\n" + "All customers:");
         for (Customer customer : customers) {
             System.out.println(customer);
         }
+
+        System.out.println("\n" + "Find by ID:");
+        System.out.println("Customer with ID 3:" + customerFindById);
     }
 }
