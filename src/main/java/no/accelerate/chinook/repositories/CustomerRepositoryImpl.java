@@ -48,4 +48,34 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         }
         return customers;
     }
+
+    @Override
+    public Object findById(Object id) {
+        return null;
+    }
+
+    @Override
+    public int insert(Object object) {
+        return 0;
+    }
+
+    @Override
+    public int update(Object object) {
+        return 0;
+    }
+
+    @Override
+    public int delete(Object object) {
+        return 0;
+    }
+
+    @Override
+    public int deleteById(Object id) {
+        return 0;
+    }
+
+    @Override
+    public Customer findByName(String name) {
+        return null;
+    }
 }

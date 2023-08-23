@@ -4,7 +4,7 @@ import no.accelerate.chinook.models.Customer;
 
 import java.util.List;
 
-public interface CustomerRepository {
-    List<Customer> findAll();
+public interface CustomerRepository extends CRUDRepository {
+    Customer findByName(String name);
 
 }
