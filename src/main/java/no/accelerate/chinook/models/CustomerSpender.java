@@ -4,13 +4,13 @@ public class CustomerSpender {
     private Long id;
     private String firstName;
     private String lastName;
-    private double totaltSpent;
+    private double totalSpent;
 
-    public CustomerSpender(Long id, String firstName, String lastName, double totaltSpent) {
+    public CustomerSpender(Long id, String firstName, String lastName, double totalSpent) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.totaltSpent = totaltSpent;
+        this.totalSpent = totalSpent;
     }
 
     public Long getId() {
@@ -37,12 +37,12 @@ public class CustomerSpender {
         this.lastName = lastName;
     }
 
-    public double getTotaltSpent() {
-        return totaltSpent;
+    public double getTotalSpent() {
+        return totalSpent;
     }
 
-    public void setTotaltSpent(double totaltSpent) {
-        this.totaltSpent = totaltSpent;
+    public void setTotalSpent(double totaltSpent) {
+        this.totalSpent = totaltSpent;
     }
 
     public String toString() {
@@ -50,7 +50,7 @@ public class CustomerSpender {
                 "id=" + id +
                 "firstName=" + firstName +  '\'' +
                 "lastName=" + lastName + '\'' +
-                "totalSpent=" + totaltSpent +
+                "totalSpent=" + totalSpent +
                 '}';
 
     }
