@@ -16,6 +16,7 @@ public class CustomerGenre {
 
 
     public String toString() {
+        //Formatted string representation of customer
         return "CustomerGenre{" +
                 "id = " + id +
                 ", genre = " + genre +  '\'' +

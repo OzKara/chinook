@@ -55,14 +55,18 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     //Method for finding customer by ID
     @Override
     public Customer findById(Long id) {
+        // SQL query to retrieve customer details by ID
         String sql = "SELECT customer_id, first_name, last_name, country, postal_code, phone, email "
                    + "FROM customer "
                    + "WHERE customer_id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            // Set the parameter for the customer ID in the prepared statement
             preparedStatement.setLong(1, id);
+            // Execute query and get the result set
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            //Create the customer if there is a result
             if (resultSet.next()) {
                 Customer customer = new Customer();
                 customer.setId(resultSet.getLong("customer_id"));
@@ -79,6 +83,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             e.printStackTrace();
             // Handle exception
         }
+        //Return null if no customer is found or an error occurs
         return null;
     }
 
@@ -107,11 +112,13 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     //Method for updating customer
     @Override
     public int update(Customer customer) {
+        // SQL query to retrieve customer by ID and edit its fields
         String sql = "UPDATE customer "
                 + "SET first_name = ?, last_name = ?, country = ?, postal_code = ?, phone = ?, email = ? "
                 + "WHERE customer_id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            // Set parameters for customer fields in the prepared statement
             preparedStatement.setString(1, customer.getFirstName());
             preparedStatement.setString(2, customer.getLastName());
             preparedStatement.setString(3, customer.getCountry());
@@ -120,11 +127,13 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             preparedStatement.setString(6, customer.getEmail());
             preparedStatement.setLong(7, customer.getId());
 
+            // Execute update query
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle exception
         }
+        //Return 0 if an error
         return 0;
     }
 
@@ -178,16 +187,19 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     @Override
     public List<Customer> getCustomerSubset(int limit, int offset) {
         List<Customer> customers = new ArrayList<>();
+        // SQL query to retrieve a subset of customers with specified limit and offset
         String sql = "SELECT customer_id, first_name, last_name, country, postal_code, phone, email "
                     + "FROM customer "
                     + "LIMIT ? OFFSET ?";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            // Set parameters for limit and offset in the prepared statement
             preparedStatement.setInt(1, limit);
             preparedStatement.setInt(2, offset);
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            // Iterate through the result set and create Customers
             while (resultSet.next()) {
                 Customer customer = new Customer();
                 customer.setId(resultSet.getLong("customer_id"));
@@ -203,6 +215,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             e.printStackTrace();
                 // Handle exception
         }
+        // Return the list of retrieved customers
         return customers;
     }
 
@@ -228,6 +241,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
 
     @Override
     public CustomerSpender findHighestSpender() {
+        // SQL query to find the customer who spent the most
         String sql = "SELECT c.customer_id, c.first_name, c.last_name, SUM(i.total) AS total_spent " +
                 "FROM customer c " +
                 "JOIN invoice i ON c.customer_id = i.customer_id " +
@@ -238,6 +252,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
+            //Extract customer details and return a CustomerSpender object if a result is found,
             if (resultSet.next()) {
                 Long customerId = resultSet.getLong("customer_id");
                 String firstName = resultSet.getString("first_name");
@@ -248,13 +263,15 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            // Handle exception
         }
+        // Return null if no highest spender is found
         return null;
     }
 
     @Override
     public List<CustomerGenre> findMostPopularGenres(Long customerId) {
-
+        // SQL query to find the most popular genres for a given customer
         String sql = "SELECT g.genre_id, g.name AS genre, COUNT(t.track_id) AS count " +
                 "FROM customer c " +
                 "JOIN invoice i ON c.customer_id = i.customer_id " +
@@ -285,6 +302,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             preparedStatement.setLong(2, customerId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            // Extract genre details
             while (resultSet.next()) {
                 Long genreId = resultSet.getLong("genre_id");
                 String genreName = resultSet.getString("genre");
@@ -296,6 +314,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             e.printStackTrace();
             // Handle exception
         }
+        // Return the list of most popular genres
         return genres;
     }
 }

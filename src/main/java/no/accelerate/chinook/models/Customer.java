@@ -81,6 +81,7 @@ public class Customer {
 
     @Override
     public String toString() {
+        //Formatted string representation of customer
         return "Customer{" + "id = " + id + ", firstName = '" + firstName + '\'' +
                 ", lastName = '" + lastName + '\'' + ", country = '" + country + '\'' +
                 ", postalCode = '" + postalCode + '\'' + ", phoneNumber = '" + phoneNumber + '\'' +

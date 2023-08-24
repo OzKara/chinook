@@ -46,6 +46,7 @@ public class CustomerSpender {
     }
 
     public String toString() {
+        //Formatted string representation of customer
         return "CustomerSpender{" +
                 "id = " + id +
                 ", firstName = " + firstName +  '\'' +
