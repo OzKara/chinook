@@ -1,6 +1,7 @@
 package no.accelerate.chinook.repositories;
 
 import no.accelerate.chinook.models.Customer;
+import no.accelerate.chinook.models.CustomerSpender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -49,6 +50,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customers;
     }
 
+    //Method for finding customer by ID
     @Override
     public Customer findById(Long id) {
         String sql = "SELECT customer_id, first_name, last_name, country, postal_code, phone, email "
@@ -88,6 +90,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return 0;
     }
 
+    //Method for updating customer
     @Override
     public int update(Customer customer) {
         String sql = "UPDATE customer "
@@ -126,34 +129,61 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return null;
     }
 
-        @Override
-        public List<Customer> getCustomerSubset(int limit, int offset) {
-            List<Customer> customers = new ArrayList<>();
-            String sql = "SELECT customer_id, first_name, last_name, country, postal_code, phone, email "
+    //Method for getting a customer subset
+    @Override
+    public List<Customer> getCustomerSubset(int limit, int offset) {
+        List<Customer> customers = new ArrayList<>();
+        String sql = "SELECT customer_id, first_name, last_name, country, postal_code, phone, email "
                     + "FROM customer "
                     + "LIMIT ? OFFSET ?";
 
-            try (Connection connection = DriverManager.getConnection(url, username, password);
-                PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                preparedStatement.setInt(1, limit);
-                preparedStatement.setInt(2, offset);
-                ResultSet resultSet = preparedStatement.executeQuery();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, limit);
+            preparedStatement.setInt(2, offset);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-                while (resultSet.next()) {
-                    Customer customer = new Customer();
-                    customer.setId(resultSet.getLong("customer_id"));
-                    customer.setFirstName(resultSet.getString("first_name"));
-                    customer.setLastName(resultSet.getString("last_name"));
-                    customer.setCountry(resultSet.getString("country"));
-                    customer.setPostalCode(resultSet.getString("postal_code"));
-                    customer.setPhoneNumber(resultSet.getString("phone"));
-                    customer.setEmail(resultSet.getString("email"));
-                    customers.add(customer);
-                }
-            }  catch (SQLException e) {
-                e.printStackTrace();
-                // Handle exception
+            while (resultSet.next()) {
+                Customer customer = new Customer();
+                customer.setId(resultSet.getLong("customer_id"));
+                customer.setFirstName(resultSet.getString("first_name"));
+                customer.setLastName(resultSet.getString("last_name"));
+                customer.setCountry(resultSet.getString("country"));
+                customer.setPostalCode(resultSet.getString("postal_code"));
+                customer.setPhoneNumber(resultSet.getString("phone"));
+                customer.setEmail(resultSet.getString("email"));
+                customers.add(customer);
             }
-            return customers;
+        }  catch (SQLException e) {
+            e.printStackTrace();
+                // Handle exception
         }
+        return customers;
+    }
+
+    @Override
+    public CustomerSpender findHighestSpender() {
+        String sql = "SELECT c.customer_id, c.first_name, c.last_name, SUM(i.total) AS total_spent " +
+                "FROM customer c " +
+                "JOIN invoice i ON c.customer_id = i.customer_id " +
+                "GROUP BY c.customer_id " +
+                "ORDER BY total_spent DESC " +
+                "LIMIT 1";
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            if (resultSet.next()) {
+                Long customerId = resultSet.getLong("customer_id");
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                double totalSpent = resultSet.getDouble("total_spent");
+
+                return new CustomerSpender(customerId, firstName, lastName, totalSpent);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
