@@ -20,6 +20,7 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         List<Customer> customers = customerRepository.findAll();
         Customer customerFindById = customerRepository.findById(3L);
+        List<Customer> customersPage = customerRepository.getCustomerSubset(5, 20);
 
         //Print all customers
         System.out.println("\n" + "All customers:");
@@ -31,6 +32,11 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
         System.out.println("\n" + "Find by ID:");
         System.out.println("Customer with ID 3:" + customerFindById);
 
+        //List of 5 customers after ID 20
+        System.out.println("\n" + "List of 5 customers after ID 20");
+        for (Customer customer : customersPage) {
+            System.out.println(customer);
+        }
 
     }
 }
