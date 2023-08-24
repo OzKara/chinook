@@ -21,12 +21,16 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
         List<Customer> customers = customerRepository.findAll();
         Customer customerFindById = customerRepository.findById(3L);
 
+        //Print all customers
         System.out.println("\n" + "All customers:");
         for (Customer customer : customers) {
             System.out.println(customer);
         }
 
+        //Print customer with ID 3
         System.out.println("\n" + "Find by ID:");
         System.out.println("Customer with ID 3:" + customerFindById);
+
+
     }
 }
