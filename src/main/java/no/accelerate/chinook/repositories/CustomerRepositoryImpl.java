@@ -123,7 +123,36 @@ public class CustomerRepositoryImpl implements CustomerRepository{
 
     @Override
     public Customer findByName(String name) {
-        return null;
+        // SQL query to search for customers with a matching first name or last name
+        String sql = "SELECT customer_id, first_name, last_name, country, postal_code, phone, email "
+                + "FROM customer "
+                + "WHERE first_name LIKE ? OR last_name LIKE ?";
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            // Set the first parameter in the prepared statement for the first_name parameter
+            // The % symbols are used to match any characters before or after the input name
+            preparedStatement.setString(1, "%" + name + "%");
+            preparedStatement.setString(2, "%" + name + "%"); //for last_name
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    // If a matching customer is found in the result set, create a Customer object
+                    Customer customer = new Customer();
+                    customer.setId(resultSet.getLong("customer_id"));
+                    customer.setFirstName(resultSet.getString("first_name"));
+                    customer.setLastName(resultSet.getString("last_name"));
+                    customer.setCountry(resultSet.getString("country"));
+                    customer.setPostalCode(resultSet.getString("postal_code"));
+                    customer.setPhoneNumber(resultSet.getString("phone"));
+                    customer.setEmail(resultSet.getString("email"));
+                    return customer;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exception
+        }
+        return null; // Customer not found
     }
 
         @Override
