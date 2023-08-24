@@ -27,9 +27,10 @@ public class CustomerCountry {
     }
 
     public String toString() {
+        //Formatted string representation of customer
         return "CustomerCountry{" +
-                "countryName=" + countryName +  '\'' +
-                "customerCount=" + customerCount +
+                ", countryName=" + countryName +  '\'' +
+                ", customerCount=" + customerCount +
                 '}';
 
     }
