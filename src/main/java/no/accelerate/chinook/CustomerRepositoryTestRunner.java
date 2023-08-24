@@ -1,6 +1,7 @@
 package no.accelerate.chinook;
 
 import no.accelerate.chinook.models.Customer;
+import no.accelerate.chinook.models.CustomerCountry;
 import no.accelerate.chinook.models.CustomerSpender;
 import no.accelerate.chinook.repositories.CustomerRepositoryImpl;
 import org.springframework.boot.ApplicationArguments;
@@ -101,6 +102,10 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
         System.out.println("\n" + "Highest spender");
         System.out.println(highestSpender);
 
+        //Print country with most customers
+        CustomerCountry countryWithMostCustomers = customerRepository.getCountryWithMostCustomers();
 
+        System.out.println("\n" + "Country with the most customers: " + countryWithMostCustomers.getCountryName()
+                + ", Customer Count: " + countryWithMostCustomers.getCustomerCount());
     }
 }
