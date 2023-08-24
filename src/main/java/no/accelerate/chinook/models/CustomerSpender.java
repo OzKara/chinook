@@ -47,10 +47,10 @@ public class CustomerSpender {
 
     public String toString() {
         return "CustomerSpender{" +
-                "id=" + id +
-                "firstName=" + firstName +  '\'' +
-                "lastName=" + lastName + '\'' +
-                "totalSpent=" + totalSpent +
+                "id = " + id +
+                ", firstName = " + firstName +  '\'' +
+                ", lastName = " + lastName + '\'' +
+                ", totalSpent = " + totalSpent +
                 '}';
 
     }
