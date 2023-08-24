@@ -1,6 +1,7 @@
 package no.accelerate.chinook;
 
 import no.accelerate.chinook.models.Customer;
+import no.accelerate.chinook.models.CustomerSpender;
 import no.accelerate.chinook.repositories.CustomerRepositoryImpl;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -54,6 +55,12 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
 
         System.out.println("\n" + "Update customer: ");
         System.out.println(customerUpdate);
+
+        //Print the highest spender
+        CustomerSpender highestSpender = customerRepository.findHighestSpender();
+
+        System.out.println("\n" + "Highest spender");
+        System.out.println(highestSpender);
 
 
     }
