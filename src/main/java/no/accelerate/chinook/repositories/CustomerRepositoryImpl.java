@@ -85,14 +85,28 @@ public class CustomerRepositoryImpl implements CustomerRepository{
 
     @Override
     public int update(Object object) {
+        return 0;
+    }
+
+    @Override
+    public int update(Customer customer) {
         String sql = "UPDATE customer "
-                + "SET last_name = ?, city = ?, state = ?, country = ? "
-                + "WHERE id = ?";
+                + "SET first_name = ?, last_name = ?, country = ?, postal_code = ?, phone = ?, email = ? "
+                + "WHERE customer_id = ?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, customer.getFirstName());
+            preparedStatement.setString(2, customer.getLastName());
+            preparedStatement.setString(3, customer.getCountry());
+            preparedStatement.setString(4, customer.getPostalCode());
+            preparedStatement.setString(5, customer.getPhoneNumber());
+            preparedStatement.setString(6, customer.getEmail());
+            preparedStatement.setLong(7, customer.getId());
+
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            // Handle exception
         }
         return 0;
     }

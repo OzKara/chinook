@@ -5,6 +5,8 @@ import no.accelerate.chinook.models.Customer;
 import java.util.List;
 
 public interface CustomerRepository extends CRUDRepository {
+    int update(Customer customer);
+
     Customer findByName(String name);
 
     List<Customer> getCustomerSubset(int limit, int offset);
