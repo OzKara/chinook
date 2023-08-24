@@ -81,13 +81,25 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     }
 
     @Override
-    public int insert(Object object) {
-        return 0;
-    }
+    public int insert(Customer customer) {
+        String sql = "INSERT INTO customer (first_name, last_name, country, postal_code, phone, email) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
-    @Override
-    public int update(Object object) {
-        return 0;
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, customer.getFirstName());
+            preparedStatement.setString(2, customer.getLastName());
+            preparedStatement.setString(3, customer.getCountry());
+            preparedStatement.setString(4, customer.getPostalCode());
+            preparedStatement.setString(5, customer.getPhoneNumber());
+            preparedStatement.setString(6, customer.getEmail());
+
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exception
+            return 0;
+        }
     }
 
     //Method for updating customer
@@ -115,47 +127,49 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     }
 
     @Override
-    public int delete(Object object) {
+    public int delete(Customer object) {
         return 0;
     }
 
     @Override
-    public int deleteById(Object id) {
+    public int deleteById(Long id) {
         return 0;
     }
 
     @Override
-    public Customer findByName(String name) {
-        // SQL query to search for customers with a matching first name or last name
+    public List<Customer> findByName(String name) {
+        List<Customer> customers = new ArrayList<>();
+        // SQL query to select customers matching the provided name
         String sql = "SELECT customer_id, first_name, last_name, country, postal_code, phone, email "
                 + "FROM customer "
-                + "WHERE first_name LIKE ? OR last_name LIKE ?";
+                + "WHERE first_name ILIKE ? OR last_name ILIKE ?";
+
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            // Set the first parameter in the prepared statement for the first_name parameter
-            // The % symbols are used to match any characters before or after the input name
+            // Set the name parameters with wildcard search (%name%) for first_name and last_name
             preparedStatement.setString(1, "%" + name + "%");
-            preparedStatement.setString(2, "%" + name + "%"); //for last_name
+            preparedStatement.setString(2, "%" + name + "%");
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    // If a matching customer is found in the result set, create a Customer object
-                    Customer customer = new Customer();
-                    customer.setId(resultSet.getLong("customer_id"));
-                    customer.setFirstName(resultSet.getString("first_name"));
-                    customer.setLastName(resultSet.getString("last_name"));
-                    customer.setCountry(resultSet.getString("country"));
-                    customer.setPostalCode(resultSet.getString("postal_code"));
-                    customer.setPhoneNumber(resultSet.getString("phone"));
-                    customer.setEmail(resultSet.getString("email"));
-                    return customer;
-                }
+            // Execute the query and retrieve the result set
+            ResultSet resultSet = preparedStatement.executeQuery();
+            // Iterate through the result set and create customer objects
+            while (resultSet.next()) {
+                Customer customer = new Customer();
+                // Populate customer attributes from the result set
+                customer.setId(resultSet.getLong("customer_id"));
+                customer.setFirstName(resultSet.getString("first_name"));
+                customer.setLastName(resultSet.getString("last_name"));
+                customer.setCountry(resultSet.getString("country"));
+                customer.setPostalCode(resultSet.getString("postal_code"));
+                customer.setPhoneNumber(resultSet.getString("phone"));
+                customer.setEmail(resultSet.getString("email"));
+                customers.add(customer); // Add customer to the list
             }
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle exception
         }
-        return null; // Customer not found
+        return customers;
     }
 
     //Method for getting a customer subset
