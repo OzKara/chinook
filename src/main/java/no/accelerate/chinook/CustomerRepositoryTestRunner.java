@@ -33,6 +33,12 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
         System.out.println("\n" + "Find by ID:");
         System.out.println("Customer with ID 3:" + customerFindById);
 
+        //Print customer with the name Stanislaw
+        Customer customerFindByName = customerRepository.findByName("Stanislaw");
+
+        System.out.println("\n" + "Find by customer(s) name:");
+        System.out.println("Customer(s) with the name Stanislaw: " + customerFindByName);
+
         //List of 5 customers after ID 20
         List<Customer> customersPage = customerRepository.getCustomerSubset(5, 20);
 
