@@ -79,13 +79,25 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     }
 
     @Override
-    public int insert(Object object) {
-        return 0;
-    }
+    public int insert(Customer customer) {
+        String sql = "INSERT INTO customer (first_name, last_name, country, postal_code, phone, email) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
-    @Override
-    public int update(Object object) {
-        return 0;
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, customer.getFirstName());
+            preparedStatement.setString(2, customer.getLastName());
+            preparedStatement.setString(3, customer.getCountry());
+            preparedStatement.setString(4, customer.getPostalCode());
+            preparedStatement.setString(5, customer.getPhoneNumber());
+            preparedStatement.setString(6, customer.getEmail());
+
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exception
+            return 0;
+        }
     }
 
     @Override
@@ -112,12 +124,12 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     }
 
     @Override
-    public int delete(Object object) {
+    public int delete(Customer object) {
         return 0;
     }
 
     @Override
-    public int deleteById(Object id) {
+    public int deleteById(Long id) {
         return 0;
     }
 
