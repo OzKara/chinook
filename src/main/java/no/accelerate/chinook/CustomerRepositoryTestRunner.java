@@ -108,11 +108,6 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
 
         Long customerId = 12L;
         List<CustomerGenre> mostPopularGenre = customerRepository.findMostPopularGenres(customerId);
-
-        //Print country with most customers
-        CustomerCountry countryWithMostCustomers = customerRepository.getCountryWithMostCustomers();
-
-        //Check if customer exists
         if (mostPopularGenre.isEmpty()) {
             System.out.println("Customer with ID " + customerId + " doesn't exist.");
         } else {
@@ -121,10 +116,11 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
                 System.out.println(genre);
             }
         }
+
+        //Print country with most customers
+        CustomerCountry countryWithMostCustomers = customerRepository.getCountryWithMostCustomers();
+
         System.out.println("\n" + "Country with the most customers: " + countryWithMostCustomers.getCountryName()
                 + ", Customer Count: " + countryWithMostCustomers.getCustomerCount());
     }
-
-
-
 }
