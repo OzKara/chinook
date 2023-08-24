@@ -1,6 +1,7 @@
 package no.accelerate.chinook.repositories;
 
 import no.accelerate.chinook.models.Customer;
+import no.accelerate.chinook.models.CustomerCountry;
 import no.accelerate.chinook.models.CustomerSpender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -202,6 +203,26 @@ public class CustomerRepositoryImpl implements CustomerRepository{
                 // Handle exception
         }
         return customers;
+    }
+
+    @Override
+    public CustomerCountry getCountryWithMostCustomers() {
+        CustomerCountry countryWithMostCustomers = null;
+        String sql = "SELECT c.country, COUNT(c.customer_id) AS customerCount " + "FROM customer c " + "GROUP BY c.country " + "ORDER BY customerCount DESC " + "LIMIT 1";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            if (resultSet.next()) {
+                String countryName = resultSet.getString("country");
+                int customerCount = resultSet.getInt("customerCount");
+                countryWithMostCustomers = new CustomerCountry(countryName, customerCount);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exception
+        }
+        return countryWithMostCustomers;
     }
 
     @Override
