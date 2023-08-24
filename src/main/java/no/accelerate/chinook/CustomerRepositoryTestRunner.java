@@ -1,6 +1,7 @@
 package no.accelerate.chinook;
 
 import no.accelerate.chinook.models.Customer;
+import no.accelerate.chinook.models.CustomerGenre;
 import no.accelerate.chinook.models.CustomerSpender;
 import no.accelerate.chinook.repositories.CustomerRepositoryImpl;
 import org.springframework.boot.ApplicationArguments;
@@ -98,9 +99,26 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
         //Print the highest spender
         CustomerSpender highestSpender = customerRepository.findHighestSpender();
 
-        System.out.println("\n" + "Highest spender");
+        System.out.println("\n" + "Highest spender:");
         System.out.println(highestSpender);
 
+        //Print customers most popular genre
+        System.out.println("\n" + "Most popular genre:");
 
+        Long customerId = 12L;
+        List<CustomerGenre> mostPopularGenre = customerRepository.findMostPopularGenres(customerId);
+
+        //Check if customer exists
+        if (mostPopularGenre.isEmpty()) {
+            System.out.println("Customer with ID " + customerId + " doesn't exist.");
+        } else {
+            System.out.println("Most popular genres for customer " + customerId + ":");
+            for (CustomerGenre genre : mostPopularGenre) {
+                System.out.println(genre);
+            }
+        }
     }
+
+
+
 }
