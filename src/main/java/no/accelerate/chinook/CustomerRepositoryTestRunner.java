@@ -33,11 +33,13 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
         System.out.println("\n" + "Find by ID:");
         System.out.println("Customer with ID 3:" + customerFindById);
 
-        //Print customer with the name Stanislaw
-        Customer customerFindByName = customerRepository.findByName("Stanislaw");
+        //Print customer(s) with the name Stanislaw
+        List<Customer> customerFindByName = customerRepository.findByName("Stanislaw");
 
         System.out.println("\n" + "Find by customer(s) name:");
-        System.out.println("Customer(s) with the name Stanislaw: " + customerFindByName);
+        for (Customer customer : customerFindByName) {
+            System.out.println("Customer(s) with the name Stanislaw: " + customer);
+        }
 
         //List of 5 customers after ID 20
         List<Customer> customersPage = customerRepository.getCustomerSubset(5, 20);
@@ -45,6 +47,37 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
         System.out.println("\n" + "List of 5 customers after ID 20");
         for (Customer customer : customersPage) {
             System.out.println(customer);
+        }
+
+        //Add new customer to the database
+        Customer customerAddition = new Customer();
+        customerAddition.setFirstName("Ozan");
+        customerAddition.setLastName("Kara");
+        customerAddition.setCountry("Norway");
+        customerAddition.setPostalCode("0977");
+        customerAddition.setPhoneNumber("112");
+        customerAddition.setEmail("ozan.kara@haugenstua.no");
+
+        System.out.println("\n" + "Add new customer: ");
+
+        // add the new customer
+        int rowsAffected = customerRepository.insert(customerAddition);
+
+        if (rowsAffected > 0) {
+            System.out.println("New customer added successfully");
+
+            // Check if the new customer exists by searching using its name, reuse findByName method
+            List<Customer> foundCustomer = customerRepository.findByName("Ozan");
+
+            if (foundCustomer != null) {
+                for (Customer customer : foundCustomer) {
+                    System.out.println("Customer found: " + customer);
+                }
+            } else {
+                System.out.println("Customer not found");
+            }
+        } else {
+            System.out.println("Failed to add new customer");
         }
 
         //Update customer with Id 18:
@@ -60,7 +93,6 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
 
         System.out.println("\n" + "Update customer: ");
         System.out.println(customerUpdate);
-
 
     }
 }
