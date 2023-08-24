@@ -1,6 +1,7 @@
 package no.accelerate.chinook.repositories;
 
 import no.accelerate.chinook.models.Customer;
+import no.accelerate.chinook.models.CustomerGenre;
 import no.accelerate.chinook.models.CustomerSpender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -214,5 +215,52 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<CustomerGenre> findMostPopularGenres(Long customerId) {
+
+        String sql = "SELECT g.genre_id, g.name AS genre, COUNT(t.track_id) AS count " +
+                "FROM customer c " +
+                "JOIN invoice i ON c.customer_id = i.customer_id " +
+                "JOIN invoice_line il ON i.invoice_id = il.invoice_id " +
+                "JOIN track t ON il.track_id = t.track_id " +
+                "JOIN genre g ON t.genre_id = g.genre_id " +
+                "WHERE c.customer_id = ? " +
+                "GROUP BY g.genre_id, g.name " +
+                "HAVING COUNT(t.track_id) = (" +
+                "    SELECT MAX(count) " +
+                "    FROM (" +
+                "        SELECT g.genre_id, COUNT(t.track_id) AS count " +
+                "        FROM customer c " +
+                "        JOIN invoice i ON c.customer_id = i.customer_id " +
+                "        JOIN invoice_line il ON i.invoice_id = il.invoice_id " +
+                "        JOIN track t ON il.track_id = t.track_id " +
+                "        JOIN genre g ON t.genre_id = g.genre_id " +
+                "        WHERE c.customer_id = ? " +
+                "        GROUP BY g.genre_id" +
+                "    ) AS genre_counts" +
+                ")";
+
+        List<CustomerGenre> genres = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, customerId);
+            preparedStatement.setLong(2, customerId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Long genreId = resultSet.getLong("genre_id");
+                String genreName = resultSet.getString("genre");
+                int count = resultSet.getInt("count");
+
+                genres.add(new CustomerGenre(genreId, genreName, count));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exception
+        }
+        return genres;
     }
 }

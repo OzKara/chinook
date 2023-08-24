@@ -17,9 +17,9 @@ public class CustomerGenre {
 
     public String toString() {
         return "CustomerGenre{" +
-                "id=" + id +
-                "genre=" + genre +  '\'' +
-                "count=" + count +
+                "id = " + id +
+                ", genre = " + genre +  '\'' +
+                ", count = " + count +
                 '}';
 
     }
