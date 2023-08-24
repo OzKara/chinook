@@ -87,7 +87,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     public int update(Object object) {
         String sql = "UPDATE customer "
                 + "SET last_name = 'Smith', city = 'Chicago', state = 'Illinois', country = 'USA' "
-                + "WHERE first_name = 'Michelle' AND last_name = 'Brooks'";
+                + "WHERE id = 18";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             return preparedStatement.executeUpdate();
