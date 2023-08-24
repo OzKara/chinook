@@ -1,6 +1,7 @@
 package no.accelerate.chinook.repositories;
 
 import no.accelerate.chinook.models.Customer;
+import no.accelerate.chinook.models.CustomerCountry;
 import no.accelerate.chinook.models.CustomerGenre;
 import no.accelerate.chinook.models.CustomerSpender;
 
@@ -15,5 +16,8 @@ public interface CustomerRepository extends CRUDRepository<Customer, Long> {
     CustomerSpender findHighestSpender();
 
     List<CustomerGenre> findMostPopularGenres(Long customerId);
+
+
+    CustomerCountry getCountryWithMostCustomers();
 
 }

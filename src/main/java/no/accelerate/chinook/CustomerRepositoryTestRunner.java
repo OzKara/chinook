@@ -2,6 +2,7 @@ package no.accelerate.chinook;
 
 import no.accelerate.chinook.models.Customer;
 import no.accelerate.chinook.models.CustomerGenre;
+import no.accelerate.chinook.models.CustomerCountry;
 import no.accelerate.chinook.models.CustomerSpender;
 import no.accelerate.chinook.repositories.CustomerRepositoryImpl;
 import org.springframework.boot.ApplicationArguments;
@@ -108,6 +109,9 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
         Long customerId = 12L;
         List<CustomerGenre> mostPopularGenre = customerRepository.findMostPopularGenres(customerId);
 
+        //Print country with most customers
+        CustomerCountry countryWithMostCustomers = customerRepository.getCountryWithMostCustomers();
+
         //Check if customer exists
         if (mostPopularGenre.isEmpty()) {
             System.out.println("Customer with ID " + customerId + " doesn't exist.");
@@ -117,6 +121,8 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
                 System.out.println(genre);
             }
         }
+        System.out.println("\n" + "Country with the most customers: " + countryWithMostCustomers.getCountryName()
+                + ", Customer Count: " + countryWithMostCustomers.getCustomerCount());
     }
 
 
