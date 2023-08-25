@@ -30,6 +30,7 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
             System.out.println(customer);
         }
 
+
         //Print customer with ID 3
         Customer customerFindById = customerRepository.findById(3L);
 
@@ -44,6 +45,7 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
             System.out.println("Customer(s) with the name Stanislaw: " + customer);
         }
 
+
         //List of 5 customers after ID 20
         List<Customer> customersPage = customerRepository.getCustomerSubset(5, 20);
 
@@ -51,6 +53,7 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
         for (Customer customer : customersPage) {
             System.out.println(customer);
         }
+
 
         //Add new customer to the database
         Customer customerAddition = new Customer();
@@ -83,6 +86,7 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
             System.out.println("Failed to add new customer");
         }
 
+
         //Update customer with Id 18:
         Customer customerUpdate = customerRepository.findById(18L);
 
@@ -97,11 +101,20 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
         System.out.println("\n" + "Update customer: ");
         System.out.println(customerUpdate);
 
+
+        //Print country with most customers
+        CustomerCountry countryWithMostCustomers = customerRepository.getCountryWithMostCustomers();
+
+        System.out.println("\n" + "Country with the most customers: " + countryWithMostCustomers.getCountryName()
+                + ", Customer Count: " + countryWithMostCustomers.getCustomerCount());
+
+
         //Print the highest spender
         CustomerSpender highestSpender = customerRepository.findHighestSpender();
 
         System.out.println("\n" + "Highest spender:");
         System.out.println(highestSpender);
+
 
         //Print customers most popular genre
         System.out.println("\n" + "Most popular genre:");
@@ -116,11 +129,5 @@ public class CustomerRepositoryTestRunner implements ApplicationRunner {
                 System.out.println(genre);
             }
         }
-
-        //Print country with most customers
-        CustomerCountry countryWithMostCustomers = customerRepository.getCountryWithMostCustomers();
-
-        System.out.println("\n" + "Country with the most customers: " + countryWithMostCustomers.getCountryName()
-                + ", Customer Count: " + countryWithMostCustomers.getCustomerCount());
     }
 }
